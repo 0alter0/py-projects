@@ -59,8 +59,11 @@ while True:
                 elif operator == "multiply":
                     print(dig1 * dig2)
                 elif operator == "divide":
-                    # Tip: Consider adding a check here so it doesn't crash on division by zero!
-                    print(dig1 / dig2)
+                    if dig2 == 0:
+                        print("Cannot divide by 0")
+                    else:
+                        print(dig1 / dig2)
+
                 elif operator == "exit":
                     print("Bye!")
                     break
