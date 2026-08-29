@@ -1,17 +1,18 @@
 import tkinter as t,zlib,struct
-f=open(input("PNG: "),"rb").read();p=8;d=b''
-while p<len(f):
- n=struct.unpack(">I",f[p:p+4])[0];typ=f[p+4:p+8];x=f[p+8:p+8+n];p+=12+n
- if typ==b'IHDR': w,h=struct.unpack(">II",x[:8])
- if typ==b'IDAT': d+=x
-raw=zlib.decompress(d);s=w*4+1;im=[];i=0;prev=[0]*(w*4)
+b=open(input("PNG: "),"rb").read();p=8;d=b''
+while p<len(b):
+ n=int.from_bytes(b[p:p+4],"big");q=b[p+4:p+8];x=b[p+8:p+8+n];p+=n+12
+ if q==b'IHDR':w,h,bd,ct=struct.unpack(">IIBB",x[:10])
+ if q==b'IDAT':d+=x
+r=zlib.decompress(d);c={2:3,6:4}[ct];a=[];i=0;pr=[0]*(w*c)
 for y in range(h):
- f=raw[i];i+=1;row=list(raw[i:i+w*4]);i+=w*4
- for x in range(len(row)):
-  a=row[x-4] if x>=4 else 0;b=prev[x];c=prev[x-4] if x>=4 else 0
-  row[x]=(row[x]+([a,b,c,(a+b+c)//3][f] if f else 0))&255
- im+=row;prev=row
-r=t.Tk();c=t.Canvas(r,width=w,height=h);c.pack()
+ f=r[i];i+=1;ro=list(r[i:i+w*c]);i+=w*c
+ for x in range(len(ro)):
+  A=ro[x-c] if x>=c else 0;B=pr[x];C=pr[x-c] if x>=c else 0
+  ro[x]=(ro[x]+([0,A,B,(A+B)//2,A+max(0,min(255,B-A))][f]))&255
+ a+=ro;pr=ro
+q=t.Tk();z=t.PhotoImage(width=w,height=h)
 for y in range(h):
- for x in range(w): c.create_rectangle(x,y,x+1,y+1,fill="#%02x%02x%02x"%tuple(im[(y*w+x)*4:(y*w+x)*4+3]),outline="")
-r.mainloop()
+ for x in range(w):
+  j=(y*w+x)*c;v=a[j:j+3];z.put("#"+"".join(f"{x:02x}" for x in v),(x,y))
+t.Label(q,image=z).pack();q.mainloop()
