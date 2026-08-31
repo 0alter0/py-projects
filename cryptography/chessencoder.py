@@ -2,6 +2,7 @@ import subprocess
 
 PIECES = "PNBRQKpnbrqk"
 BASE = 13
+BOARD_SIZE = 64
 
 VALUES = {c: i + 1 for i, c in enumerate(PIECES)}
 REVERSE = {i + 1: c for i, c in enumerate(PIECES)}
@@ -19,9 +20,6 @@ EN_PASSANT = ["-"] + [
     for file in "abcdefgh"
 ]
 
-MAX_BYTES = 33
-MARKER = b"FEN1"
-
 def copy_to_clipboard(text):
     subprocess.run("clip", input=text, text=True, shell=True)
 
@@ -36,6 +34,7 @@ def compress_rank(values):
             if empty:
                 result += str(empty)
                 empty = 0
+
             result += REVERSE[value]
 
     if empty:
@@ -52,13 +51,17 @@ def expand_board(board):
         for c in rank:
             if c.isdigit():
                 n = int(c)
+                if n < 1 or n > 8:
+                    raise ValueError("Invalid empty-square count")
                 values.extend([0] * n)
                 count += n
+
             elif c in VALUES:
                 values.append(VALUES[c])
                 count += 1
+
             else:
-                raise ValueError("Invalid character in board")
+                raise ValueError("Invalid board character")
 
         if count != 8:
             raise ValueError("Invalid FEN rank")
@@ -70,30 +73,21 @@ def expand_board(board):
 
 def encode(text):
     data = text.encode("utf-8")
-    payload = MARKER + data
-
     length = len(data)
 
-    if length > MAX_BYTES:
-        raise ValueError(
-            f"String is too long. Maximum is {MAX_BYTES} UTF-8 bytes."
-        )
-
-    number = int.from_bytes(payload, "big")
+    number = int.from_bytes(data, "big") if data else 0
 
     board_values = []
 
-    for _ in range(64):
-        number, remainder = divmod(number, BASE)
-        board_values.append(remainder)
+    for _ in range(BOARD_SIZE):
+        number, digit = divmod(number, BASE)
+        board_values.append(digit)
 
-    side, number = divmod(number, 2)
-    castling, number = divmod(number, 16)
-    ep, number = divmod(number, 17)
-    halfmove, number = divmod(number, 1000000)
+    number, ep = divmod(number, 17)
+    number, castling = divmod(number, 16)
+    number, side = divmod(number, 2)
 
-    if number != 0:
-        raise ValueError("String is too long.")
+    fullmove = number + 1
 
     board_values.reverse()
 
@@ -110,9 +104,9 @@ def encode(text):
         + " "
         + EN_PASSANT[ep]
         + " "
-        + str(halfmove)
-        + " "
         + str(length)
+        + " "
+        + str(fullmove)
     )
 
 def decode(fen):
@@ -122,14 +116,14 @@ def decode(fen):
         raise ValueError("Invalid FEN")
 
     board = parts[0]
-    side_text = parts[1]
+    side = parts[1]
     castling = parts[2]
     ep = parts[3]
-    halfmove = int(parts[4])
-    length = int(parts[5])
+    length = int(parts[4])
+    fullmove = int(parts[5])
 
-    if side_text not in ("w", "b"):
-        raise ValueError("Invalid side to move")
+    if side not in ("w", "b"):
+        raise ValueError("Invalid side")
 
     if castling not in CASTLING:
         raise ValueError("Invalid castling field")
@@ -137,8 +131,11 @@ def decode(fen):
     if ep not in EN_PASSANT:
         raise ValueError("Invalid en-passant field")
 
-    if length < 0 or length > MAX_BYTES:
-        raise ValueError("Invalid text length")
+    if length < 0:
+        raise ValueError("Invalid length")
+
+    if fullmove < 1:
+        raise ValueError("Invalid fullmove number")
 
     board_values = expand_board(board)
 
@@ -147,29 +144,26 @@ def decode(fen):
     for value in board_values:
         board_number = board_number * BASE + value
 
-    metadata = halfmove
-    metadata = metadata * 17 + EN_PASSANT.index(ep)
-    metadata = metadata * 16 + CASTLING.index(castling)
-    metadata = metadata * 2 + (0 if side_text == "w" else 1)
+    number = fullmove - 1
+    number = number * 2 + (0 if side == "w" else 1)
+    number = number * 16 + CASTLING.index(castling)
+    number = number * 17 + EN_PASSANT.index(ep)
+    number = number * (BASE ** BOARD_SIZE) + board_number
 
-    number = metadata * (BASE ** 64) + board_number
-
-    payload_length = length + len(MARKER)
+    if length == 0:
+        return ""
 
     try:
-        payload = number.to_bytes(payload_length, "big")
+        data = number.to_bytes(length, "big")
     except OverflowError:
-        raise ValueError("FEN contains invalid encoded data")
-
-    if not payload.startswith(MARKER):
-        raise ValueError("This FEN was not created by this encoder")
-
-    data = payload[len(MARKER):]
+        raise ValueError(
+            "The FEN does not contain enough data for the specified length"
+        )
 
     try:
         return data.decode("utf-8")
     except UnicodeDecodeError:
-        raise ValueError("Encoded data is not valid UTF-8")
+        raise ValueError("Decoded data is not valid UTF-8")
 
 while True:
     mode = input("Encode or Decode: ").strip().lower()
