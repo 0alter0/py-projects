@@ -1,6 +1,8 @@
 import subprocess
 
 PIECES = "PNBRQKpnbrqk"
+BASE = 13
+
 VALUES = {c: i + 1 for i, c in enumerate(PIECES)}
 REVERSE = {i + 1: c for i, c in enumerate(PIECES)}
 
@@ -17,9 +19,8 @@ EN_PASSANT = ["-"] + [
     for file in "abcdefgh"
 ]
 
-BASE = 13
-BOARD_SIZE = 64
-HALFMOVE_BASE = 1000000
+MAX_BYTES = 33
+MARKER = b"FEN1"
 
 def copy_to_clipboard(text):
     subprocess.run("clip", input=text, text=True, shell=True)
@@ -69,23 +70,27 @@ def expand_board(board):
 
 def encode(text):
     data = text.encode("utf-8")
+    payload = MARKER + data
+
     length = len(data)
 
-    if length > 36:
-        raise ValueError("String is too long. Maximum is about 36 UTF-8 bytes.")
+    if length > MAX_BYTES:
+        raise ValueError(
+            f"String is too long. Maximum is {MAX_BYTES} UTF-8 bytes."
+        )
 
-    number = int.from_bytes(data, "big") if data else 0
+    number = int.from_bytes(payload, "big")
 
     board_values = []
 
-    for _ in range(BOARD_SIZE):
+    for _ in range(64):
         number, remainder = divmod(number, BASE)
         board_values.append(remainder)
 
     side, number = divmod(number, 2)
     castling, number = divmod(number, 16)
     ep, number = divmod(number, 17)
-    halfmove, number = divmod(number, HALFMOVE_BASE)
+    halfmove, number = divmod(number, 1000000)
 
     if number != 0:
         raise ValueError("String is too long.")
@@ -132,8 +137,8 @@ def decode(fen):
     if ep not in EN_PASSANT:
         raise ValueError("Invalid en-passant field")
 
-    if length < 0 or length > 36:
-        raise ValueError("Invalid length")
+    if length < 0 or length > MAX_BYTES:
+        raise ValueError("Invalid text length")
 
     board_values = expand_board(board)
 
@@ -147,17 +152,24 @@ def decode(fen):
     metadata = metadata * 16 + CASTLING.index(castling)
     metadata = metadata * 2 + (0 if side_text == "w" else 1)
 
-    number = metadata * (BASE ** BOARD_SIZE) + board_number
+    number = metadata * (BASE ** 64) + board_number
 
-    if length == 0:
-        return ""
+    payload_length = length + len(MARKER)
 
     try:
-        data = number.to_bytes(length, "big")
+        payload = number.to_bytes(payload_length, "big")
     except OverflowError:
-        raise ValueError("FEN does not contain a valid encoded string of this length")
+        raise ValueError("FEN contains invalid encoded data")
 
-    return data.decode("utf-8")
+    if not payload.startswith(MARKER):
+        raise ValueError("This FEN was not created by this encoder")
+
+    data = payload[len(MARKER):]
+
+    try:
+        return data.decode("utf-8")
+    except UnicodeDecodeError:
+        raise ValueError("Encoded data is not valid UTF-8")
 
 while True:
     mode = input("Encode or Decode: ").strip().lower()
