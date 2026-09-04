@@ -1,0 +1,59 @@
+surnames = ["Smith","Jones","Williams","Taylor","Brown","Davies","Evans","Wilson","Thomas","Roberts",
+           "Johnson","Lewis","Walker","Robinson","Wood","Thompson","White","Watson","Jackson","Wright",
+           "Green","Harris","Cooper","King","Lee","Martin","Clarke","James","Morgan","Hughes",
+           "Edwards","Hill","Moore","Clark","Harrison","Scott","Young","Morris","Hall","Ward",
+           "Turner","Carter","Phillips","Mitchell","Patel","Adams","Campbell","Anderson","Allen","Cook",
+           "Bailey","Parker","Miller","Davis","Murphy","Price","Bennett","Young","Griffiths","Kelly",
+           "Collins","Stewart","Sanchez","Morris","Rogers","Reed","Morgan","Bell","Murphy","Bailey",
+           "Rivera","Cooper","Richardson","Cox","Howard","Ward","Torres","Peterson","Gray","Ramirez",
+           "James","Watkins","Hamilton","Ford","Gibson","Marshall","Stevens","Murray","Graham","Fisher",
+           "Wallace","Simpson","Ellis","Mills","Russell","Bennett","Dixon","Harvey","Pearson","Graham",
+           "Reynolds","Hamilton","Graham","McDonald","Cameron","Robertson","Stevenson","Thomson","Murray","Fraser",
+           "Black","White","Grey","Brown","Green","Golding","Silver","Stone","Wood","Ash",
+           "Fox","Wolf","Hart","Hawk","Raven","Crow","Finch","Swan","Drake","Frost"]
+
+boys_names = [
+    "James", "Oliver", "George", "Harry", "Jack", "Jacob", "Noah",
+    "Charlie", "Thomas", "William", "Leo", "Alfie", "Henry", "Oscar",
+    "Theo", "Archie", "Arthur", "Freddie", "Teddy", "Theodore",
+    "Finley", "Arlo", "Alexander", "Isaac", "Edward", "Lucas", "Max",
+    "Mohammed", "Ethan", "Harrison", "Benjamin", "Mason", "Sebastian",
+    "Daniel", "Rory", "Logan", "Dylan", "Zachary", "Toby", "Aiden",
+    "Joseph", "Samuel", "Reuben", "Jaxon", "Louie", "David", "Elijah",
+    "Hugo", "Nathan", "Ryan", "Connor", "Liam", "Callum", "Cameron",
+    "Luke", "Reece", "Owen", "Adam", "Matthew", "Lewis", "Finlay",
+    "Kieran", "Aaron", "Rhys", "Elliot", "Elliott", "Cody", "Kai"
+]
+
+girls_names = [
+    "Emily", "Olivia", "Isla", "Ava", "Ivy", "Lily", "Isabella",
+    "Rosie", "Sophia", "Grace", "Florence", "Willow", "Poppy", "Ella",
+    "Charlotte", "Daisy", "Sienna", "Evie", "Maya", "Sofia", "Alice",
+    "Phoebe", "Freya", "Matilda", "Ruby", "Emilia", "Isabelle",
+    "Jessica", "Evelyn", "Mia", "Harper", "Chloe", "Elsie", "Layla",
+    "Sophie", "Ada", "Maisie", "Elizabeth", "Eleanor"
+]
+
+jobs = ["Farmer","Blacksmith","Merchant","Shopkeeper","Baker","Butcher","Fisherman","Hunter","Miner","Woodcutter",
+        "Carpenter","Mason","Tailor","Weaver","Potter","Brewer","Cook","Chef","Bartender","Innkeeper",
+        "Guard","Soldier","Knight","Archer","Swordsman","Scout","Mercenary","Bodyguard","Captain","General",
+        "Doctor","Nurse","Surgeon","Medic","Herbalist","Alchemist","Apothecary","Dentist","Veterinarian","Pharmacist",
+        "Teacher","Professor","Scholar","Librarian","Historian","Scientist","Researcher","Engineer","Inventor","Architect",
+        "Builder","Mechanic","Blacksmith","Jeweler","Watchmaker","Toolmaker","Glassblower","Shipwright","Weaponsmith","Armorer",
+        "King","Queen","Prince","Princess","Duke","Duchess","Baron","Baroness","Lord","Lady",
+        "Mayor","Governor","Politician","Judge","Lawyer","Bailiff","Detective","Sheriff","Police Officer","Prison Guard",
+        "Priest","Monk","Nun","Cleric","Bishop","Oracle","Wizard","Witch","Sorcerer","Mage",
+        "Adventurer","Explorer","Treasure Hunter","Dungeon Keeper","Monster Hunter","Dragon Slayer","Bounty Hunter","Cartographer","Guide","Traveller",
+        "Thief","Pickpocket","Burglar","Smuggler","Pirate","Assassin","Spy","Informant","Gang Leader","Crime Boss",
+        "Courier","Messenger","Postman","Driver","Coachman","Sailor","Captain","Navigator","Pilot","Train Conductor",
+        "Artist","Painter","Sculptor","Musician","Singer","Dancer","Actor","Writer","Poet","Photographer",
+        "Journalist","Reporter","News Anchor","Publisher","Editor","Translator","Author","Illustrator","Designer","Filmmaker",
+        "Programmer","Software Developer","Game Developer","Web Developer","Data Analyst","Cybersecurity Specialist","IT Technician",
+        "System Administrator","Robotics Engineer","AI Researcher",
+        "Banker","Accountant","Trader","Investor","Broker","Cashier"]
+
+talking_quirks = ("hah","uh","yeah","yknow","","","","","","")
+
+personalities = ["Rude","Sad","Angry","Happy","Shy","Confident","Honest","Loyal","Cowardly"]
+likes = ["rain","dogs","books","fishing","music","spicy food","mountains"]
+dislikes = ["rain","dogs","books","fishing","music","spicy food","mountains","spiders","cats","heights"]
