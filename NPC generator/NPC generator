@@ -1,0 +1,135 @@
+import random
+from npc_attributes import *
+from datetime import datetime
+
+current_time = datetime.now().time()
+current_date = datetime.now().date()
+
+gender = ["Male","Female"]
+
+print()
+new_npc = input("Summon an NPC [y/n] ").lower()
+print()
+
+if new_npc == "y":
+
+    surname = random.choice(surnames)
+    personality = random.choice(personalities)
+    like = random.choice(likes)
+    talking_quirk = random.choice(talking_quirks)
+    dislike = random.choice(dislikes)
+    strength = random.randint(20,100)
+    age = random.randint(1,100)
+    job = random.choice(jobs)
+    name = random.choice(boys_names + girls_names)
+
+    if name in boys_names:
+        gender = "Male"
+    else:
+        gender = "Female"
+
+    print(name,surname)
+    print()
+    print("Age:",age)
+    print("Gender:",gender)
+    print()
+
+    print("Personality:",personality)
+    print("Likes:",like)
+    print("Dislikes",dislike)
+    print("Job:",job)
+    print()
+
+    print(name,":",talking_quirk,"hello")
+    print()
+
+    chat = input(f"Would you like to chat to {name}? [y/n] or [stats] ").lower()
+
+    if chat == "y":
+
+        print("Type: Commands to view the list of commands.")
+        print()
+
+        while True:
+            response = input("You : ")
+            print()
+
+            if "commands" in response:
+                print("Commands:\nwho\nhi\nlike\ndont like\nok\ntime\ndate\njob")
+                print()
+
+            elif "who" in response:
+                print(name,talking_quirk,"im",name)
+                print()
+
+            elif "hi" in response or "hello" in response:
+                print(name,":","Hi.")
+                print()
+
+            elif "like" in response or "likes" in response:
+                print(name,":",talking_quirk,"i like",like)
+                print()
+
+            elif "dislikes" in response or "dislike" in response:
+                print(name,":",talking_quirk,"i dont like",dislike)
+                print()
+
+            elif "ok" in response or "okay" in response or "alright" in response or "cool" in response:
+                print(name,":",talking_quirk,"yeah.")
+                print()
+
+            elif "time" in response:
+                print(name,":",talking_quirk,"probably around",current_time)
+                print()
+
+            elif "date" in response:
+                    print(name,":",talking_quirk,"i think its like.. ",current_date)
+                    print()
+
+            elif "job" in response or "work" in response:
+                print(name,":",talking_quirk,"I work as a",job)
+                print()
+
+            else:
+                print(name,":",talking_quirk,"Uhhh, what..")
+                print()
+
+    elif chat == "stats":
+        while True:
+            print()
+            stat = input("check a stat [statlist] ").lower()
+            print()
+
+            if stat == "statlist":
+                print("Stats:\ngender\nage\nname\nsurname\njob\ntalking quirk\nlikes\ndislike\npersonality\nstrength")
+
+            elif stat == "gender":
+                print(gender)
+
+            elif stat == "age":
+                print(age)
+
+            elif stat == "job":
+                print(job)
+
+            elif stat == "name":
+                print(name)
+
+            elif stat == "surname":
+                print(surname)
+
+            elif stat == "talking quirk":
+                print(talking_quirk)
+
+            elif stat == "personality":
+                print(personality) 
+
+            elif stat == "likes":
+                print(like)
+
+            elif stat == "dislike":
+                print(dislike)
+
+    elif chat == "n":
+        print()
+        print("Bye! ")
